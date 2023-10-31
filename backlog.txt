@@ -1,0 +1,30 @@
+Backlog Items:
+
+General:
+- add directory 
+
+Player Dections:
+- create own model 
+
+Identify Players:
+- add numbers 
+
+Map Field:
+- add masking using detections
+- use field number and hash marks detection model 
+
+Player Tacking:
+- need to factor in frames per second for player movement 
+- need to add player association: explicit, shadow, non-players(refs)
+- need to put constraints on estimates to stop moving players (do that post fact)
+- 
+
+Football Tracking:
+
+
+Diagrams:
+- college vs nfl hashhmarks
+- add football 
+- add score
+- add line of scrimmage and first down lines
+- pan / zoom on diagram as play progresses 
