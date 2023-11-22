@@ -34,6 +34,10 @@ class IdentifyPlayersGUI:
         frame = ttk.Frame(self.root, padding="10")
         frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
 
+        # Add label for player count
+        self.player_count_label = ttk.Label(frame, text="Players: 0 / 22")
+        self.player_count_label.grid(row=7, column=1, pady=5, sticky=tk.W+tk.E)
+
         # Player Positions Treeview
         start_identify_btn = ttk.Button(frame, text="Start Identify Players", command=self.start_identify_players)
         start_identify_btn.grid(row=0, column=1, pady=5, sticky=tk.W+tk.E)
@@ -80,12 +84,19 @@ class IdentifyPlayersGUI:
 
 
     ###### Identify Players Functions ########
+
+    def update_player_count_label(self):
+        player_count = len(self.df_players_frame_0)
+        self.player_count_label.config(text=f"Players: {player_count} / 22")
+
         
     def start_identify_players(self):
         df_players = pd.read_csv(self.players_csv_path)
         self.tracker_ids = np.sort(df_players['tracker_id'].unique())
         self.df_players_frame_0 = df_players[df_players['frame'] == 0]
+        self.df_players_frame_0 = self.df_players_frame_0.sort_values(by=['x','y'])
         self.update_player_treeview()  # Populate the player treeview
+        self.update_player_count_label()
 
         cv2.namedWindow('Identify Players', cv2.WINDOW_NORMAL)
         self.cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
@@ -133,6 +144,7 @@ class IdentifyPlayersGUI:
                                                 (self.df_players_frame_0['x'] == float(old_x)) & 
                                                 (self.df_players_frame_0['y'] == float(old_y))].index)
             self.update_player_treeview()
+            self.update_player_count_label()
             self.draw_frame_players(self.frame_player)  # Redraw the frame after deletion
             self.selected_player = None  # Reset selected point
 

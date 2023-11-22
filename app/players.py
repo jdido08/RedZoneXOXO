@@ -1,34 +1,10 @@
+import pandas as pd
 import numpy as np
-import supervision as sv
-from ultralytics import YOLO
 from roboflow import Roboflow
-import pandas as pd
 import cv2
-import numpy as np
-import pandas as pd
-import numpy as np
-from itertools import combinations
-from sklearn.linear_model import LinearRegression
-import matplotlib.patches as patches
-import matplotlib.pyplot as plt
-import matplotlib.pyplot as plt
-from matplotlib.path import Path
-import matplotlib.patches as patches
-from matplotlib.patches import FancyArrowPatch
-import pandas as pd
-import matplotlib.pyplot as plt
-import imageio.v2 as imageio_v2
-import io
-from IPython.display import display, Image
-import imageio.v2 as imageio_v2
-import pandas as pd
-import numpy as np
-from scipy.spatial import KDTree
-
-## track depenendies ###
-import pandas as pd
-import numpy as np 
+import supervision as sv
 from scipy.spatial import cKDTree
+
 
 import yaml
 with open("config.yaml", 'r') as stream:

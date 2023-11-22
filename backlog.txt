@@ -7,6 +7,7 @@ Player Dections:
 - create own model 
 
 Identify Players:
+- sort players before showing in gui grid 
 - add numbers 
 
 Map Field:
@@ -15,8 +16,11 @@ Map Field:
 
 Player Tacking:
 - need to factor in frames per second for player movement 
+- need to put constraints on estimates to stop moving players (do that post fact) -- done 
+- identify players where tracking stopped / 
+
 - need to add player association: explicit, shadow, non-players(refs)
-- need to put constraints on estimates to stop moving players (do that post fact)
+- drop lineman -- too hard to track rn 
 - 
 
 Football Tracking:

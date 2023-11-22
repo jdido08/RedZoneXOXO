@@ -34,18 +34,18 @@ class TrackPlayersGUI:
         frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
 
         #Track Players Round 1
-        track_players_btn = ttk.Button(frame, text="Track Players Round 1", command=self.track_players_round_1)
+        track_players_btn = ttk.Button(frame, text="Track Players", command=self.track_players_round_1)
         track_players_btn.grid(row=0, column=1, pady=5, sticky=tk.W+tk.E)
 
-        track_players_btn_2 = ttk.Button(frame, text="Track Players Round 2", command=self.track_players_round_2)
+        track_players_btn_2 = ttk.Button(frame, text="End Tracking", command=self.track_players_round_2)
         track_players_btn_2.grid(row=0, column=3, pady=5, sticky=tk.W+tk.E)
 
         #Add Player Association
-        add_association_btn = ttk.Button(frame, text="Add Player Association", command=self.add_player_association)
+        add_association_btn = ttk.Button(frame, text="Add Player Association [WIP]", command=self.add_player_association)
         add_association_btn.grid(row=1, column=3, pady=5, sticky=tk.W+tk.E)
 
         #Add Player Shadow Association
-        add_shadow_association_btn = ttk.Button(frame, text="Add Shadow Player Association", command=self.add_shadow_association)
+        add_shadow_association_btn = ttk.Button(frame, text="Add Shadow Player Association [WIP]", command=self.add_shadow_association)
         add_shadow_association_btn.grid(row=3, column=3, pady=5, sticky=tk.W+tk.E)
 
         #Add Ref Association
@@ -87,6 +87,15 @@ class TrackPlayersGUI:
         self.lu_tree_frame.grid(row=4, column=3, padx=10, sticky=tk.W+tk.E+tk.N+tk.S)
 
         self.lu_tree = ttk.Treeview(self.lu_tree_frame)
+        self.lu_tree["columns"] = ("tracker_id", "label", "count_last_known")
+        self.lu_tree.column("tracker_id", width=0, stretch=tk.NO)
+        self.lu_tree.column("label", width=0, stretch=tk.NO)
+        self.lu_tree.column("count_last_known", anchor=tk.W, width=50)
+
+        self.lu_tree.heading("tracker_id", text="tracker_id", anchor=tk.W)
+        self.lu_tree.heading("label", text="label", anchor=tk.W)
+        self.lu_tree.heading("count_last_known", text="count_last_known", anchor=tk.W)
+        self.lu_tree.grid(row=0, column=0, sticky=tk.W+tk.E+tk.N+tk.S)
         
         self.lu_tree_scroll = tk.Scrollbar(self.lu_tree_frame)
         self.lu_tree_scroll.grid(row=0, column=1, sticky=tk.N+tk.S)
@@ -99,6 +108,7 @@ class TrackPlayersGUI:
 
     ###### Track Players Functions ########
     def populate_last_unknown_tree(self, df):
+        print("populating last unknown tree with data: ", df)
         self.lu_tree["columns"] = df.columns.tolist()
         for col in df.columns:
             self.lu_tree.column(col, anchor=tk.W)
@@ -115,26 +125,28 @@ class TrackPlayersGUI:
         #print(f"FPS of the video: {fps}")
         return fps
         
-    def calc_num_of_last_known_positions(self,df):
-        
-        #print(df)
-
+    def calc_num_of_last_known_positions(self, df):
         df = df.drop(columns=['tracker_id']).reset_index()
 
-        # Step 2: Calculate the number of "Last Known" positions for each tracker_id
+        labels_df = df.groupby('tracker_id')['label'].first()
+
+        # Calculate the number of "Last Known" positions for each tracker_id
         last_known_counts = df[df['calc'] == 'Last Known'].groupby('tracker_id').size()
-        
-        # Step 3: Create a new DataFrame
+
+        # Create a new DataFrame
         result_df = last_known_counts.reset_index(name='count_last_known')
-        
-        # Step 4: Sort the DataFrame based on the count, in descending order
+
+        # Sort the DataFrame based on the count, in descending order
         result_df = result_df.sort_values(by='count_last_known', ascending=False)
+
+        # Merge with labels_df
+        result_df = pd.merge(result_df, labels_df, on='tracker_id', how='left')
 
         print("result_df")
         print(result_df)
-        
-        # Step 5: Return the sorted DataFrame
+
         return result_df
+
 
 
     def track_players_round_1(self):
@@ -154,13 +166,14 @@ class TrackPlayersGUI:
         tracker_ids_with_last_known_posistions = self.calc_num_of_last_known_positions(self.df_tracked_players)
         self.populate_last_unknown_tree(tracker_ids_with_last_known_posistions)
 
-        # csv_path_tracked_players = self.source_video_path[:-4] + "_tracked_players.csv" #remove .mp4
-        # df_track_players.to_csv(csv_path_tracked_players)
-        # self.callback(csv_path_player_associations,csv_path_tracked_players)
+        csv_path_tracked_players = self.source_video_path[:-4] + "_tracked_players.csv" #remove .mp4
+        self.df_tracked_players.to_csv(csv_path_tracked_players)
+        csv_path_player_associations = "NULL!"
+        self.callback(csv_path_player_associations,csv_path_tracked_players)
         # self.root.destroy()
         
     def track_players_round_2(self):
-        print("TRACK PLAYERS ROUND 2")
+        self.root.destroy()
 
     def update_treeview(self):
 

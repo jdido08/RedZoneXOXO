@@ -1,7 +1,4 @@
 import numpy as np
-import supervision as sv
-from ultralytics import YOLO
-from roboflow import Roboflow
 import pandas as pd
 import cv2
 import numpy as np
@@ -191,6 +188,12 @@ def resize_image(image, width=None, height=None, inter=cv2.INTER_AREA):
     # Get the image dimensions
     (h, w) = image.shape[:2]
 
+    # Adjust width and height to be divisible by 16
+    if width is not None and width % 16 != 0:
+        width -= width % 16
+    if height is not None and height % 16 != 0:
+        height -= height % 16
+
     # If both width and height are None, return the original image
     if width is None and height is None:
         return image
@@ -224,7 +227,7 @@ def create_football_diagram_video(df, source_video_path):
 
     temp_files = []  # List to store paths of temporary chunk files
     chunk_frames = []
-    chunk_size = 50
+    chunk_size = 25
 
     for frame_num in frames_numbers:
         print(frame_num)
@@ -241,7 +244,7 @@ def create_football_diagram_video(df, source_video_path):
         image = imageio_v2.imread(buf)
 
         # Resize the image to the desired resolution
-        resized_image = resize_image(image, width=1024)  # Adjust the width as per your needs
+        resized_image = resize_image(image, width=800)  # Adjust the width as per your needs
 
         chunk_frames.append(resized_image)
         #chunk_frames.append(imageio_v2.imread(buf))

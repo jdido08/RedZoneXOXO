@@ -1,10 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from tkinter import simpledialog
 import pandas as pd
-import numpy as np
-import cv2
-
 
 from players import detect_players, transform_player_positions, track_players
 
